@@ -70,5 +70,6 @@ func init() {
 	flag.Usage = func() {
 		fmt.Fprintln(flag.CommandLine.Output(), usage)
 		flag.PrintDefaults()
+		fmt.Fprintln(flag.CommandLine.Output(), "For query syntax see https://jmespath.org")
 	}
 }
