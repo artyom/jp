@@ -1,4 +1,6 @@
-// TODO describe program
+// Command jp queries JSON documens using JMESPath syntax.
+//
+// See https://jmespath.org for details.
 package main
 
 import (
