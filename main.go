@@ -8,6 +8,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -37,14 +38,19 @@ type runArgs struct {
 }
 
 func run(args runArgs) error {
-	if args.query == "" || args.input == "" {
+	if args.query == "" {
 		return errInvalidUsage
 	}
 	jp, err := jmespath.Compile(args.query)
 	if err != nil {
 		return fmt.Errorf("compiling query %q: %w", args.query, err)
 	}
-	b, err := os.ReadFile(args.input)
+	var b []byte
+	if args.input != "" {
+		b, err = os.ReadFile(args.input)
+	} else {
+		b, err = io.ReadAll(os.Stdin)
+	}
 	if err != nil {
 		return err
 	}
@@ -64,9 +70,9 @@ func run(args runArgs) error {
 	return enc.Encode(out)
 }
 
-var errInvalidUsage = errors.New("both query and input must be set")
+var errInvalidUsage = errors.New("query must be set")
 
-const usage = `Usage: jp [flags] <query> <file>`
+const usage = `Usage: jp [flags] <query> [file]`
 
 func init() {
 	flag.Usage = func() {
